@@ -1,0 +1,9 @@
+timestamp,temp_c,feels_like_c,humidity_pct,pressure_hpa,wind_kmh,wind_deg,clouds_pct,rain_1h_mm,uv_index,visibility_km,description,city
+2026-03-22 15:22:18,29.1,30.5,69,1018,23.4,28,51,0,8,13.2,Lluvia ligera,Cali
+2026-03-22 15:22:48,28.9,30.2,64,1016,21.1,64,79,3.7,3,9.1,Lluvias ocasionales,Cali
+2026-03-22 15:23:26,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
+2026-03-22 15:23:56,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
+2026-03-22 15:24:25,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
+2026-03-22 15:24:56,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
+2026-03-22 15:25:26,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
+2026-03-22 15:25:56,29.4,34.4,73,1007,4.8,0,100,0.0,0,10.0,Nubes,Santiago de Cali
