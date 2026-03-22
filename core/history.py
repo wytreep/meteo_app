@@ -37,8 +37,13 @@ class History:
         """Etiquetas de tiempo para el eje X de los gráficos."""
         return [t.strftime("%H:%M") for t in self.times]
 
+    VALID_KEYS = {"temps", "humids", "pressures", "winds", "rains", "uv"}
+
     def stats(self, key: str) -> dict:
         """Devuelve min, max, avg y last de una serie."""
+        if key not in self.VALID_KEYS:
+            raise ValueError(f"History.stats: key inválida '{key}'. "
+                             f"Válidas: {self.VALID_KEYS}")
         vals = list(getattr(self, key))
         if not vals:
             return {"min": 0, "max": 0, "avg": 0, "last": 0}

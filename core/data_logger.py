@@ -11,15 +11,19 @@ from datetime import datetime
 from config import Config
 from core.weather_data import WeatherData
 
+# Bug fix: usar la carpeta del script como base, no el cwd
+_BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 class DataLogger:
     """
-    Escribe cada lectura en un CSV local.
+    Escribe cada lectura en un CSV local junto al proyecto.
     Permite exportar ese CSV a una ruta elegida por el usuario.
     """
 
-    def __init__(self, path: Path = Config.DATA_FILE):
-        self.path = path
+    def __init__(self, path: Path = None):
+        # Si no se especifica path, guardar junto al proyecto
+        self.path = path or (_BASE_DIR / Config.DATA_FILE)
         self._ensure_headers()
 
     def _ensure_headers(self) -> None:

@@ -102,25 +102,27 @@ class WeatherStation(tk.Tk):
         tk.Frame(rf, bg=Theme.BORDER, width=1,
                  height=24).pack(side="right", padx=8)
 
-        # Botones
-        for text, cmd, fg, bg_ in [
-            ("↺  Actualizar", self._refresh,
-             Theme.TEXT_INV, Theme.ACCENT),
-            ("↓  CSV",
-             lambda: self._logger.export(self),
-             Theme.SUCCESS, Theme.CARD),
-        ]:
-            b = tk.Button(rf, text=text,
-                          font=(Theme.FONT_SANS, 9),
-                          bg=bg_, fg=fg,
-                          relief="flat", padx=10, pady=4,
-                          cursor="hand2",
-                          activebackground=Theme.ACCENT_DARK,
-                          activeforeground=Theme.TEXT_INV,
-                          highlightthickness=1,
-                          highlightbackground=Theme.BORDER,
-                          command=cmd)
-            b.pack(side="right", padx=3)
+        # Botones — explícitos para evitar lambda closure bug en loops
+        tk.Button(rf, text="↺  Actualizar",
+                  font=(Theme.FONT_SANS, 9),
+                  bg=Theme.ACCENT, fg=Theme.TEXT_INV,
+                  relief="flat", padx=10, pady=4, cursor="hand2",
+                  activebackground=Theme.ACCENT_DARK,
+                  activeforeground=Theme.TEXT_INV,
+                  highlightthickness=1,
+                  highlightbackground=Theme.BORDER,
+                  command=self._refresh).pack(side="right", padx=3)
+
+        tk.Button(rf, text="↓  CSV",
+                  font=(Theme.FONT_SANS, 9),
+                  bg=Theme.CARD, fg=Theme.SUCCESS,
+                  relief="flat", padx=10, pady=4, cursor="hand2",
+                  activebackground=Theme.CARD_ALT,
+                  activeforeground=Theme.SUCCESS,
+                  highlightthickness=1,
+                  highlightbackground=Theme.BORDER,
+                  command=lambda: self._logger.export(self)
+                  ).pack(side="right", padx=3)
 
         tk.Frame(rf, bg=Theme.BORDER, width=1,
                  height=24).pack(side="right", padx=8)
@@ -204,15 +206,18 @@ class WeatherStation(tk.Tk):
             return
         self._busy = True
         self._var_status.set("⟳  Actualizando…")
-        threading.Thread(target=self._fetch, daemon=True).start()
+        # Bug fix: leer StringVars en hilo principal antes de lanzar el hilo
+        key  = self._var_key.get().strip()
+        city = self._var_city.get().strip() or Config.CITY
+        demo = self._var_demo.get()
+        threading.Thread(
+            target=self._fetch, args=(key, city, demo),
+            daemon=True).start()
 
-    def _fetch(self) -> None:
+    def _fetch(self, key: str, city: str, demo: bool) -> None:
         """Corre en hilo secundario. Obtiene datos y llama _render."""
         try:
-            key  = self._var_key.get().strip()
-            city = self._var_city.get().strip() or Config.CITY
-
-            if self._var_demo.get() or not key:
+            if demo or not key:
                 wd   = WeatherData.demo(city.split(",")[0])
                 fc   = self._demo_forecast(wd)
                 mode = "DEMO"
