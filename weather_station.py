@@ -475,7 +475,7 @@ class MapWidget(tk.Frame):
                                  highlightthickness=0)
         self._canvas.pack(fill="both", expand=True)
         self._canvas.bind("<Configure>", lambda e: self._draw())
-        self.after(800, self._animate_pulse)
+        self.after(100, self._animate_pulse)
 
     def update_location(self, lat: float, lon: float, city: str = ""):
         self._lat = lat
@@ -1330,7 +1330,7 @@ class CompassWidget(tk.Canvas):
         self._angle = 0
         self._w = width
         self._h = height
-        self._draw()
+        self.after(50, self._draw)
 
     def set_angle(self, deg: float):
         self._angle = deg
