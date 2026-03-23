@@ -18,6 +18,31 @@ from views.dashboard_view import DashboardView
 from views.charts_view    import ChartsView
 
 
+class RippleButton(tk.Button):
+    """Botón con efecto de escala (ripple) al presionar."""
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self._orig_relief = kwargs.get("relief", "flat")
+        self.bind("<ButtonPress-1>",   self._press)
+        self.bind("<ButtonRelease-1>", self._release)
+
+    def _press(self, _=None):
+        self.configure(relief="sunken")
+        orig_pad = self.cget("padx")
+        try:
+            self.configure(padx=max(0, int(orig_pad)-1))
+        except Exception:
+            pass
+
+    def _release(self, _=None):
+        self.configure(relief=self._orig_relief)
+        orig_pad = self.cget("padx")
+        try:
+            self.configure(padx=int(orig_pad)+1)
+        except Exception:
+            pass
+
+
 class WeatherStation(tk.Tk):
     """
     Ventana principal de la aplicación.
@@ -103,7 +128,7 @@ class WeatherStation(tk.Tk):
                  height=24).pack(side="right", padx=8)
 
         # Botones — explícitos para evitar lambda closure bug en loops
-        tk.Button(rf, text="↺  Actualizar",
+        RippleButton(rf, text="↺  Actualizar",
                   font=(Theme.FONT_SANS, 9),
                   bg=Theme.ACCENT, fg=Theme.TEXT_INV,
                   relief="flat", padx=10, pady=4, cursor="hand2",
@@ -113,7 +138,7 @@ class WeatherStation(tk.Tk):
                   highlightbackground=Theme.BORDER,
                   command=self._refresh).pack(side="right", padx=3)
 
-        tk.Button(rf, text="↓  CSV",
+        RippleButton(rf, text="↓  CSV",
                   font=(Theme.FONT_SANS, 9),
                   bg=Theme.CARD, fg=Theme.SUCCESS,
                   relief="flat", padx=10, pady=4, cursor="hand2",
@@ -175,6 +200,7 @@ class WeatherStation(tk.Tk):
 
         self._dashboard = DashboardView(t1, self._history)
         self._dashboard.pack(fill="both", expand=True)
+        self._dashboard.set_city_callback(self._on_map_city_selected)
 
         self._charts = ChartsView(t2, self._history)
         self._charts.pack(fill="both", expand=True)
@@ -263,6 +289,17 @@ class WeatherStation(tk.Tk):
     # ══════════════════════════════════════════════════════════
     #  RENDER
     # ══════════════════════════════════════════════════════════
+
+    def _on_map_city_selected(self, city: str) -> None:
+        """El usuario hizo clic en una ciudad del mapa → actualizar datos."""
+        # Actualizar el campo ciudad en el header
+        if "," not in city:
+            city_api = f"{city},CO"
+        else:
+            city_api = city
+        self._var_city.set(city_api)
+        self._var_demo.set(False)   # cambiar a API si hay key
+        self._refresh()
 
     def _render(self, mode: str) -> None:
         """Actualiza todas las vistas con los datos más recientes."""

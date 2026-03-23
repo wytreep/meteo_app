@@ -1,19 +1,15 @@
 """
-config.py — Configuración global de la aplicación.
-Todas las constantes en un solo lugar.
+config.py — Configuración global de la app móvil.
 """
-from pathlib import Path
 
 
 class Config:
-    API_KEY     = "2262ff91362f26070bb08c849bbe9856"            # ← pega tu API key aquí
+    API_KEY     = "2262ff91362f26070bb08c849bbe9856"          # ← pega tu API key aquí
     CITY        = "Cali,CO"
-    UNITS       = "metric"      # metric=°C | imperial=°F
-    INTERVAL    = 30            # segundos entre auto-refresh
-    HISTORY_LEN = 120
-    DATA_FILE   = Path("weather_history.csv")
-    WIN_SIZE    = "1200x750"
-    WIN_TITLE   = "Estación Meteorológica"
+    UNITS       = "metric"
+    INTERVAL    = 30          # segundos entre auto-refresh
+    HISTORY_LEN = 60
+    APP_TITLE   = "MeteoApp"
 
     ALERT = {
         "uv_high":       6,
@@ -28,55 +24,35 @@ class Config:
     }
 
 
-class Theme:
-    # Fondos
-    BG           = "#F4F5F7"
-    SURFACE      = "#FFFFFF"
-    CARD         = "#FFFFFF"
-    CARD_ALT     = "#F8F9FB"
+class Palette:
+    """Colores Material Design 3 para la app."""
+    # Primarios
+    PRIMARY       = "#1565C0"   # Azul oscuro
+    PRIMARY_LIGHT = "#E3F2FD"   # Azul muy claro
+    ON_PRIMARY    = "#FFFFFF"
 
-    # Bordes
-    BORDER       = "#DDE1E7"
-    BORDER_DARK  = "#C5CAD3"
-
-    # Texto
-    TEXT         = "#1A2332"
-    TEXT_SEC     = "#5A6578"
-    TEXT_MUT     = "#8C96A5"
-    TEXT_INV     = "#FFFFFF"
-
-    # Acento — azul clásico
-    ACCENT       = "#2563EB"
-    ACCENT_DARK  = "#1D4ED8"
-    ACCENT_LIGHT = "#EFF6FF"
+    # Superficie
+    SURFACE       = "#FFFFFF"
+    SURFACE_VAR   = "#F5F7FA"
+    BACKGROUND    = "#F0F4F8"
+    ON_SURFACE    = "#1A2332"
+    ON_SURFACE_V  = "#5A6578"
 
     # Semánticos
-    SUCCESS      = "#16A34A"
-    WARNING      = "#D97706"
-    DANGER       = "#DC2626"
-    INFO         = "#0891B2"
+    SUCCESS       = "#2E7D32"
+    SUCCESS_BG    = "#E8F5E9"
+    WARNING       = "#E65100"
+    WARNING_BG    = "#FFF3E0"
+    DANGER        = "#C62828"
+    DANGER_BG     = "#FFEBEE"
+    INFO          = "#01579B"
+    INFO_BG       = "#E1F5FE"
 
-    # Gráficos
-    CHART_BG     = "#FFFFFF"
-    GRID         = "#F1F3F6"
-    SERIES       = ["#2563EB", "#16A34A", "#D97706", "#7C3AED"]
+    # Bordes y divisores
+    OUTLINE       = "#DDE1E7"
+    OUTLINE_VAR   = "#C5CAD3"
 
-    # Fuentes
-    FONT_MONO    = "Courier"
-    FONT_SANS    = ""
-
-    @staticmethod
-    def uv_color(uv: float) -> str:
-        if uv < 3:  return Theme.SUCCESS
-        if uv < 6:  return Theme.WARNING
-        if uv < 8:  return "#EA580C"
-        if uv < 11: return Theme.DANGER
-        return "#7C3AED"
-
-    @staticmethod
-    def uv_label(uv: float) -> str:
-        if uv < 3:  return "Bajo"
-        if uv < 6:  return "Moderado"
-        if uv < 8:  return "Alto"
-        if uv < 11: return "Muy alto"
-        return "Extremo"
+    # Chart
+    CHART_BG      = "#FFFFFF"
+    GRID          = "#F1F3F6"
+    SERIES        = ["#1565C0", "#2E7D32", "#E65100", "#6A1B9A"]
